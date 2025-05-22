@@ -10,7 +10,7 @@ class SavingSerializer(serializers.ModelSerializer):
         read_only_fields = ('interest_user',)
 
 # Saving 옵션 데이터
-class SavingOptionSerialzier(serializers.ModelSerializer):
+class SavingOptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = SavingOption
         fields = '__all__'
@@ -19,7 +19,7 @@ class SavingOptionSerialzier(serializers.ModelSerializer):
 
 # Saving 리스트 출력
 class SavingListSerializer(serializers.ModelSerializer):
-    savingoption_set = SavingOptionSerialzier(many=True, read_only=True)
+    savingoption_set = SavingOptionSerializer(many=True, read_only=True)
     class Meta:
         model = SavingProduct
         fields = '__all__'
@@ -53,3 +53,63 @@ class DepositListSerializer(serializers.ModelSerializer):
         read_only_fields = ('interest_user',)
 
 
+# 프로필 페이지에서 찜한 상품들 보여줄 때 상세 정보와 함께 출력하기 위해
+class InterestSavingSerializer(serializers.ModelSerializer):
+    depositoption_set = DepositOptionSerializer(many=True, read_only=True)
+    class Meta:
+        model = DepositProduct
+        fields = ('id', 'fin_prdt_cd', 'fin_prdt_nm', 'kor_co_nm', 'depositoption_set')
+
+class InterestDepositSerializer(serializers.ModelSerializer):
+    savingoption_set = SavingOptionSerializer(many=True, read_only=True)
+    class Meta:
+        model = SavingProduct
+        fields = ('id', 'fin_prdt_cd', 'fin_prdt_nm', 'kor_co_nm', 'savingoption_set')
+
+
+# 가입 기간이 같은 옵션만 응답으로 포함
+class DepositMonthSerializser(serializers.ModelSerializer):
+    depositoption_set = DepositOptionSerializer(many=True, read_only=True)
+    class Meta:
+        model = DepositProduct
+        fields = '__all__'
+        read_only_fields = ('interest_user',)
+
+    def __init__(self, *args, **kwargs):
+        # save_trm 꺼내서 변수에 저장
+        self.save_trm = kwargs.pop('save_trm', None)
+        # 부모 클래스로 전달
+        super().__init__(*args, **kwargs)
+
+    def to_representation(self, instance):
+        # 기본 직렬화 데이터 가져오기
+        representation = super().to_representation(instance)
+        # depositoption_set 일시 제거, 예금 상품의 기본 정보만 남김
+        depositoption_set = representation.pop('depositoption_set')
+
+        # save_trm 조건에 맞는 옵션만 필터링
+        filtered_options = [option for option in depositoption_set if option['save_trm'] == self.save_trm]
+        representation['depositoption_set'] = filtered_options
+
+        return representation
+    
+class SavingMonthSerializer(serializers.ModelSerializer):
+    savingoption_set = SavingOptionSerializer(many=True, read_only=True)
+    class Meta:
+        model = SavingProduct
+        fields = '__all__'
+        read_only_fields = ('interest_user',)
+
+        def __init__(self, *args, **kwargs):
+            self.save_trm = kwargs.pop('save_trm', None)
+            super().__init__(*args, **kwargs)
+
+        def to_representation(self, instance):
+            representation = super().to_representation(instance)
+            savingoption_set = representation.pop('savingoption_set')
+
+            # save_trm 조건에 맞는 옵션만 필터링
+            filtered_options = [option for option in savingoption_set if option['save_trm'] == self.save_trm]
+            representation['savingoption_set'] = filtered_options
+
+            return representation
