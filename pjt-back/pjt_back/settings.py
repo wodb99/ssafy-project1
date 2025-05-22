@@ -16,8 +16,8 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # 환경 변수 설정
-import os
-import environ
+# import os
+# import environ
 
 # env = environ.Env(DEBUG=(bool, True))
 # environ.Env.read_env(env_file=os.path.join(BASE_DIR, '.env'))
