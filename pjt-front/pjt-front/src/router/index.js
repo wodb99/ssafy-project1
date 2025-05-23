@@ -1,14 +1,18 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import SignUpView from '@/views/SignUpView.vue'
+import LogInView from '@/views/LogInView.vue'
+import VideoSearch from '@/views/VideoSearch.vue'
+import VideoDetail from '@/views/VideoDetail.vue'
 // import HomeView from '../views/HomeView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-  //   {
-  //     path: '/',
-  //     name: 'home',
-  //     component: HomeView,
-  //   },
+    // {
+    //   path: '/',
+    //   name: 'home',
+    //   component: HomeView,
+    // },
   //   {
   //     path: '/about',
   //     name: 'about',
@@ -17,16 +21,26 @@ const router = createRouter({
   //     // which is lazy-loaded when the route is visited.
   //     component: () => import('../views/AboutView.vue'),
   //   },
-      {
-      path: '/signup',
-      name: 'SignUpView',
-      component: SignUpView
+    {
+      path: '/search',
+      name: 'VideoSearch',
+      component: VideoSearch
     },
     {
-      path: '/login',
-      name: 'LogInView',
-      component: LogInView
+      path: '/video/:id',
+      name: 'VideoDetail',
+      component: VideoDetail
     },
+    //   {
+    //   path: '/signup',
+    //   name: 'SignUpView',
+    //   component: SignUpView
+    // },
+    // {
+    //   path: '/login',
+    //   name: 'LogInView',
+    //   component: LogInView
+    // },
   ],
 })
 
