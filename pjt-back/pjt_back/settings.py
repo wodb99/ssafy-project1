@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'articles',
     'financial_products',
     'accounts',
+    'golds',
     # 외부 패키지
     'rest_framework',
     'rest_framework.authtoken',
