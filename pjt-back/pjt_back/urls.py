@@ -25,6 +25,7 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     # path('exchange/', include('exchange.urls')),
     path('products/', include('financial_products.urls')),
+    path('golds/', include('golds.urls')),
      # TokenAuthentication
      path('dj-rest-auth/', include('dj_rest_auth.urls')),
     # Registration 
